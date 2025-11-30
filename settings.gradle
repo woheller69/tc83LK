@@ -10,4 +10,4 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "PureJava"
+rootProject.name = "JavaTC83"
