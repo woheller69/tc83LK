@@ -14,4 +14,5 @@
         ##### Matches
         ##### Date, Winner, Loser
         MATCH 2025-10-05 15:30, Claudia, Ursula 
-        MATCH 2025-10-10 16:00, Monika, Ursula 
+        MATCH 2025-10-10 16:00, Monika, Ursula
+        MATCH 2025-10-10 16:00, -, Ursula 
