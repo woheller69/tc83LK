@@ -3,7 +3,7 @@
 ##### In Downloads gehen und installieren
 #####
 ##### Eingabeaufforderung cmd aufrufen, mit cd pfad in Verzeichnis der Anwendung wechseln
-##### java -jar JavaTC83-1.0.jar ausführen
+##### java -jar TC83LK-1.0.jar ausführen
 
 ##### Add players at begin of the season
 ##### Name, LK
