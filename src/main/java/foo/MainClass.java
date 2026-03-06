@@ -59,8 +59,25 @@ public class MainClass {
 
         System.out.println("\nEndstand");
         listRanking();
+        System.out.println("\n\nHTML\n");
+        printHtmlRanking();
     }
 
+    private static void printHtmlRanking(){
+        StringBuilder sb = new StringBuilder();
+
+        // Sort players by lkValue ascending
+        Collections.sort(playerList);
+
+        for (Player p : playerList) {
+            sb.append("<tr>\n");
+            sb.append("  <td align=\"left\">").append(p.name).append("</td>\n");
+            // Format lkValue - use comma as decimal separator if needed
+            sb.append("  <td align=\"left\">").append(String.format("%.3f", p.lkValue).replace('.', ',')).append("</td>\n");
+            sb.append("</tr>\n");
+        }
+        System.out.println(sb.toString());
+    }
     private static void listRanking() {
         Collections.sort(playerList); // Sorts by original lkValue ascending
         for (int i=0; i < playerList.size(); i++){
