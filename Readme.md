@@ -24,7 +24,7 @@
         
         ##### Matches
         ##### Date, Winner, Loser
-        MATCH 2025-10-10 15:30, Sandra, Lisa
+        MATCH 2025-10-10 15:30, Sandra,Lisa
         MATCH 2025-10-10 15:31, Christine,Lisa
         MATCH 2025-10-05 15:30, Lisa, Sandra
         MATCH 2025-10-10 15:30, Tina,Sandra

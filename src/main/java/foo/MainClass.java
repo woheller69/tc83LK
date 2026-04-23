@@ -59,8 +59,22 @@ public class MainClass {
 
         System.out.println("\nEndstand");
         listRanking();
-        System.out.println("\n\nHTML\n");
+        System.out.println("\n\nHTML RANKING\n");
         printHtmlRanking();
+        System.out.println("\n\nHTML MATCHLIST\n");
+        printHtmlMatchlist();
+    }
+
+    private static void printHtmlMatchlist() {
+        StringBuilder sb = new StringBuilder();
+        for (int i=0; i < matchList.size(); i++){
+            sb.append("<tr>\n");
+            sb.append("  <td align=\"left\">").append(matchList.get(i).getFormattedDate()).append("</td>\n");
+            sb.append("  <td align=\"left\">").append(matchList.get(i).winner).append("</td>\n");
+            sb.append("  <td align=\"left\">").append(matchList.get(i).loser).append("</td>\n");
+            sb.append("</tr>\n");
+        }
+        System.out.println(sb.toString());
     }
 
     private static void printHtmlRanking(){
