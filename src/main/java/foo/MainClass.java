@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -19,6 +21,7 @@ public class MainClass {
     static List<Player> playerList = new ArrayList<>();
     static List<Match> matchList = new ArrayList<>();
     static Set<String> participatedPlayers = new HashSet<>();
+    static String title = "";
 
     public static void main(String[] arg) {
 
@@ -27,7 +30,9 @@ public class MainClass {
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             String line;
             while((line = reader.readLine()) != null) {
-                if (line.startsWith("ADD")) {
+                if (line.startsWith("TITLE")) {
+                    title = line.split("TITLE")[1].trim();
+                } else if (line.startsWith("ADD")) {
                     String content = line.split("ADD")[1];
                     String name = content.split(",")[0].trim().toUpperCase();
                     double lk = Double.parseDouble(content.split(",")[1]);
@@ -68,9 +73,34 @@ public class MainClass {
 
         writeHtmlRanking();
         writeHtmlMatchlist();
+        writeMarkdown();
 
         checkMissingParticipants();
         checkDuplicateMatches();
+    }
+
+    private static void writeMarkdown() {
+        try (PrintWriter writer = new PrintWriter(Files.newOutputStream(Paths.get("current.md")))) {
+            DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+            String today = LocalDateTime.now(ZoneOffset.UTC).format(dateFormat);
+
+            writer.println("# " );
+            writer.println("## " + title);
+            writer.println();
+            writer.println("### **Stand: " + today + "**");
+            writer.println("<p>&nbsp;</p>");
+            writer.println("| Platz&nbsp;&nbsp;&nbsp; | Spieler | LK |");
+            writer.println("| :--- | :--- | :--- |");
+
+            Collections.sort(playerList);
+            int rank = 1;
+            for (Player p : playerList) {
+                writer.println("| " + rank + " | " + p.name + " | " + String.format("%.3f", p.lkValue) + " |");
+                rank++;
+            }
+        } catch (IOException e) {
+            System.out.println(e);
+        }
     }
 
     private static void checkMissingParticipants() {
@@ -104,7 +134,7 @@ public class MainClass {
     }
 
     private static void writeHtmlMatchlist() {
-        try (PrintWriter writer = new PrintWriter(new FileOutputStream("matches.html"))) {
+        try (PrintWriter writer = new PrintWriter(Files.newOutputStream(Paths.get("matches.html")))) {
             for (int i=0; i < matchList.size(); i++){
                 writer.println("<tr>");
                 writer.println("  <td align=\"left\">" + matchList.get(i).getDateTime() + "</td>");
@@ -118,7 +148,7 @@ public class MainClass {
     }
 
     private static void writeHtmlRanking(){
-        try (PrintWriter writer = new PrintWriter(new FileOutputStream("current.html"))) {
+        try (PrintWriter writer = new PrintWriter(Files.newOutputStream(Paths.get("current.html")))) {
             // Sort players by lkValue ascending
             Collections.sort(playerList);
 
@@ -135,7 +165,7 @@ public class MainClass {
 
     private static void listRanking() {
         Collections.sort(playerList); // Sorts by original lkValue ascending
-        try (PrintWriter writer = new PrintWriter(new FileOutputStream("current.csv"))) {
+        try (PrintWriter writer = new PrintWriter(Files.newOutputStream(Paths.get("current.csv")))) {
             for (int i=0; i < playerList.size(); i++){
                 String line = playerList.get(i).name + " " + String.format("%.3f",playerList.get(i).lkValue);
                 System.out.println(line);

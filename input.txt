@@ -5,6 +5,7 @@
 ##### Eingabeaufforderung cmd aufrufen, mit cd pfad in Verzeichnis der Anwendung wechseln
 ##### java -jar TC83LK-1.0.jar ausführen
 
+TITLE Vereinsmeisterschaft 2026
 ##### Add players at begin of the season
 ##### Name, LK
 ADD Sandra, 6.2
