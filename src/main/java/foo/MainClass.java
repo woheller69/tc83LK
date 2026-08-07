@@ -2,8 +2,10 @@ package foo;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -60,42 +62,51 @@ public class MainClass {
         System.out.println("\nEndstand");
         listRanking();
         System.out.println("\n\nHTML RANKING\n");
-        printHtmlRanking();
+        writeHtmlRanking();
         System.out.println("\n\nHTML MATCHLIST\n");
-        printHtmlMatchlist();
+        writeHtmlMatchlist();
     }
 
-    private static void printHtmlMatchlist() {
-        StringBuilder sb = new StringBuilder();
-        for (int i=0; i < matchList.size(); i++){
-            sb.append("<tr>\n");
-            sb.append("  <td align=\"left\">").append(matchList.get(i).getFormattedDate()).append("</td>\n");
-            sb.append("  <td align=\"left\">").append(matchList.get(i).winner).append("</td>\n");
-            sb.append("  <td align=\"left\">").append(matchList.get(i).loser).append("</td>\n");
-            sb.append("</tr>\n");
+    private static void writeHtmlMatchlist() {
+        try (PrintWriter writer = new PrintWriter(new FileOutputStream("matches.html"))) {
+            for (int i=0; i < matchList.size(); i++){
+                writer.println("<tr>");
+                writer.println("  <td align=\"left\">" + matchList.get(i).getFormattedDate() + "</td>");
+                writer.println("  <td align=\"left\">" + matchList.get(i).winner + "</td>");
+                writer.println("  <td align=\"left\">" + matchList.get(i).loser + "</td>");
+                writer.println("</tr>");
+            }
+        } catch (IOException e) {
+            System.out.println(e);
         }
-        System.out.println(sb.toString());
     }
 
-    private static void printHtmlRanking(){
-        StringBuilder sb = new StringBuilder();
+    private static void writeHtmlRanking(){
+        try (PrintWriter writer = new PrintWriter(new FileOutputStream("current.html"))) {
+            // Sort players by lkValue ascending
+            Collections.sort(playerList);
 
-        // Sort players by lkValue ascending
-        Collections.sort(playerList);
-
-        for (Player p : playerList) {
-            sb.append("<tr>\n");
-            sb.append("  <td align=\"left\">").append(p.name).append("</td>\n");
-            // Format lkValue - use comma as decimal separator if needed
-            sb.append("  <td align=\"left\">").append(String.format("%.3f", p.lkValue).replace('.', ',')).append("</td>\n");
-            sb.append("</tr>\n");
+            for (Player p : playerList) {
+                writer.println("<tr>");
+                writer.println("  <td align=\"left\">" + p.name + "</td>");
+                writer.println("  <td align=\"left\">" + String.format("%.3f", p.lkValue).replace('.', ',') + "</td>");
+                writer.println("</tr>");
+            }
+        } catch (IOException e) {
+            System.out.println(e);
         }
-        System.out.println(sb.toString());
     }
+
     private static void listRanking() {
         Collections.sort(playerList); // Sorts by original lkValue ascending
-        for (int i=0; i < playerList.size(); i++){
-            System.out.println(playerList.get(i).name + " " + String.format("%.3f",playerList.get(i).lkValue));
+        try (PrintWriter writer = new PrintWriter(new FileOutputStream("current.csv"))) {
+            for (int i=0; i < playerList.size(); i++){
+                String line = playerList.get(i).name + " " + String.format("%.3f",playerList.get(i).lkValue);
+                System.out.println(line);
+                writer.println(line);
+            }
+        } catch (IOException e) {
+            System.out.println(e);
         }
     }
 
