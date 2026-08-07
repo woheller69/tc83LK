@@ -7,6 +7,12 @@ public class Match implements Comparable<Match>{
     String winner;
     String loser;
     long date;
+
+    private static final DateTimeFormatter DATE_FORMAT =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneOffset.UTC);
+    private static final DateTimeFormatter DATETIME_FORMAT =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withZone(ZoneOffset.UTC);
+
     public Match(String winner, String loser, long date) {
         this.winner = winner;
         this.loser = loser;
@@ -17,9 +23,12 @@ public class Match implements Comparable<Match>{
         return Long.compare(this.date, match.date); // Ascending order
     }
 
-    public String getFormattedDate() {
-        return Instant.ofEpochSecond(date)
-                .atOffset(ZoneOffset.UTC)
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+    public String getDate() {
+        return DATE_FORMAT.format(Instant.ofEpochSecond(date));
     }
+
+    public String getDateTime() {
+        return DATETIME_FORMAT.format(Instant.ofEpochSecond(date));
+    }
+
 }

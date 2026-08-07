@@ -11,11 +11,15 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class MainClass {
     static List<Player> playerList = new ArrayList<>();
     static List<Match> matchList = new ArrayList<>();
+    static Set<String> participatedPlayers = new HashSet<>();
+
     public static void main(String[] arg) {
 
         try {
@@ -51,9 +55,9 @@ public class MainClass {
         // Calculate rankings
         for (int i=0; i < matchList.size(); i++){
             if (matchList.get(i).winner.equals("-")){
-                System.out.println("\n"+matchList.get(i).getFormattedDate()+" " + matchList.get(i).loser+" nicht angetreten.");
+                System.out.println("\n"+matchList.get(i).getDateTime()+" " + matchList.get(i).loser+" nicht angetreten.");
             } else {
-                System.out.println("\n"+matchList.get(i).getFormattedDate()+" " + matchList.get(i).winner + " schlägt " + matchList.get(i).loser);
+                System.out.println("\n"+matchList.get(i).getDateTime()+" " + matchList.get(i).winner + " schlägt " + matchList.get(i).loser);
             }
             updateLK(matchList.get(i));
             listRanking();
@@ -61,17 +65,49 @@ public class MainClass {
 
         System.out.println("\nEndstand");
         listRanking();
-        System.out.println("\n\nHTML RANKING\n");
+
         writeHtmlRanking();
-        System.out.println("\n\nHTML MATCHLIST\n");
         writeHtmlMatchlist();
+
+        checkMissingParticipants();
+        checkDuplicateMatches();
+    }
+
+    private static void checkMissingParticipants() {
+        List<String> notParticipated = new ArrayList<>();
+        for (Player p : playerList) {
+            if (!participatedPlayers.contains(p.name)) {
+                notParticipated.add(p.name);
+            }
+        }
+        if (!notParticipated.isEmpty()) {
+            System.out.println("\nSpieler ohne Spielteilnahme:");
+            for (String name : notParticipated) {
+                System.out.println("* " + name);
+            }
+        }
+    }
+
+    private static void checkDuplicateMatches() {
+        for (int i = 0; i < matchList.size(); i++) {
+            for (int j = i + 1; j < matchList.size(); j++) {
+                Match m1 = matchList.get(i);
+                Match m2 = matchList.get(j);
+                if (m1.getDate().equals(m2.getDate())
+                        && m1.winner.equals(m2.winner)
+                        && m1.loser.equals(m2.loser)) {
+                    System.out.println("\nWarnung: Duplikat erkannt am " + m1.getDateTime()
+                            + ": " + m1.winner + " schlägt " + m1.loser);
+                }
+            }
+        }
     }
 
     private static void writeHtmlMatchlist() {
         try (PrintWriter writer = new PrintWriter(new FileOutputStream("matches.html"))) {
             for (int i=0; i < matchList.size(); i++){
                 writer.println("<tr>");
-                writer.println("  <td align=\"left\">" + matchList.get(i).getFormattedDate() + "</td>");
+                writer.println("  <td align=\"left\">" + matchList.get(i).getDateTime() + "</td>");
                 writer.println("  <td align=\"left\">" + matchList.get(i).winner + "</td>");
                 writer.println("  <td align=\"left\">" + matchList.get(i).loser + "</td>");
                 writer.println("</tr>");
@@ -168,6 +204,7 @@ public class MainClass {
                 if (match.loser.equals(playerList.get(i).name)) loser=playerList.get(i);
             }
             loser.lkValue = Math.min(loser.lkValue + 0.3, 25.0);
+            participatedPlayers.add(match.loser);
         } else {
             for (int i=0; i < playerList.size(); i++){
                 if (match.loser.equals(playerList.get(i).name)) loser=playerList.get(i);
@@ -175,6 +212,9 @@ public class MainClass {
             }
             assert winner != null;
             assert loser != null;
+
+            participatedPlayers.add(winner.name);
+            participatedPlayers.add(loser.name);
 
             winnerLK = CalcLK.calculate(winner.lkValue, loser.lkValue);
             winner.lkValue = winnerLK;
