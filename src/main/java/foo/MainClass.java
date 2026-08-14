@@ -84,20 +84,33 @@ public class MainClass {
             DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy");
             String today = LocalDateTime.now(ZoneOffset.UTC).format(dateFormat);
 
-            writer.println("# " );
-            writer.println("## " + title);
+            writer.println("# " + title);
             writer.println();
-            writer.println("### **Stand: " + today + "**");
+            writer.println("<h2 style=\"margin-left: 12px; margin-top: 0; margin-bottom: 0;\">Stand: " + today + "</h2>");
             writer.println("<p>&nbsp;</p>");
-            writer.println("| Platz&nbsp;&nbsp;&nbsp; | Spieler | LK |");
-            writer.println("| :--- | :--- | :--- |");
+            writer.println("<table style=\"font-size: 24px; border-collapse: collapse;\">");
+            writer.println("  <thead>");
+            writer.println("    <tr>");
+            writer.println("      <th style=\"padding: 1px 12px; text-align: left;\">Platz</th>");
+            writer.println("      <th style=\"padding: 1px 12px; text-align: left;\">Spieler</th>");
+            writer.println("      <th style=\"padding: 1px 12px; text-align: left;\">LK</th>");
+            writer.println("    </tr>");
+            writer.println("  </thead>");
+            writer.println("  <tbody>");
 
             Collections.sort(playerList);
             int rank = 1;
             for (Player p : playerList) {
-                writer.println("| " + rank + " | " + p.name + " | " + String.format("%.3f", p.lkValue) + " |");
+                writer.println("    <tr>");
+                writer.println("      <td style=\"padding: 1px 12px;\">" + rank + "</td>");
+                writer.println("      <td style=\"padding: 1px 12px;\">" + p.name + "</td>");
+                writer.println("      <td style=\"padding: 1px 12px;\">" + String.format("%.3f", p.lkValue) + "</td>");
+                writer.println("    </tr>");
                 rank++;
             }
+
+            writer.println("  </tbody>");
+            writer.println("</table>");
         } catch (IOException e) {
             System.out.println(e);
         }
