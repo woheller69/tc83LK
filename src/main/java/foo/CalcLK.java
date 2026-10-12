@@ -2,7 +2,7 @@ package foo;
 
 public class CalcLK {
 
-    public static double calculate(double winnerLK, double looserLK) {
+    public static double calcImprovement(double winnerLK, double looserLK) {
         //Use values rounded to 1 decimal
         double winnerLK1d = (double) (Math.floor(winnerLK*10.0)/10.0);
         double looserLK1d = (double) (Math.floor(looserLK*10.0)/10.0);
@@ -19,8 +19,7 @@ public class CalcLK {
         double improvement = points/barrier;
         //System.out.println("Verbesserung " + improvement);
 
-        double newWinnerLK = Math.min(winnerLK - improvement, 25.0);
-        return newWinnerLK;
+        return improvement;
         //Altersklassenfaktor und Zählweisenfaktor 100%
     }
 

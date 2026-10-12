@@ -2,7 +2,6 @@ package foo;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -64,7 +63,14 @@ public class MainClass {
             } else {
                 System.out.println("\n"+matchList.get(i).getDateTime()+" " + matchList.get(i).winner + " schlägt " + matchList.get(i).loser);
             }
-            updateLK(matchList.get(i));
+            updateImprovement(matchList.get(i));
+
+            if (i+1 < matchList.size() && (matchList.get(i+1).date == matchList.get(i).date )) { //first update all improvements for same timestamp, then update LKs
+                System.out.println("\nCollecting matches with same timestamp");
+                continue;
+            }
+            updateLKs();
+            Collections.sort(playerList);
             listRanking();
         }
 
@@ -237,8 +243,7 @@ public class MainClass {
         listRanking();
     }
 
-    public static void updateLK(Match match){
-        double winnerLK;
+    public static void updateImprovement(Match match){
         Player winner = null;
         Player loser = null;
 
@@ -246,7 +251,7 @@ public class MainClass {
             for (int i=0; i < playerList.size(); i++){
                 if (match.loser.equals(playerList.get(i).name)) loser=playerList.get(i);
             }
-            loser.lkValue = Math.min(loser.lkValue + 0.3, 25.0);
+            loser.improvement = loser.improvement - 0.3;
             participatedPlayers.add(match.loser);
         } else {
             for (int i=0; i < playerList.size(); i++){
@@ -259,10 +264,14 @@ public class MainClass {
             participatedPlayers.add(winner.name);
             participatedPlayers.add(loser.name);
 
-            winnerLK = CalcLK.calculate(winner.lkValue, loser.lkValue);
-            winner.lkValue = winnerLK;
+            winner.improvement = winner.improvement + CalcLK.calcImprovement(winner.lkValue, loser.lkValue);
         }
+    }
 
-        Collections.sort(playerList);
+     static void updateLKs(){ //update LKs with cumulated improvements and reset improvements
+        for (Player player: playerList){
+            player.lkValue = Math.min(player.lkValue - player.improvement, 25.0);
+            player.improvement = 0.0;
+        }
     }
 }
