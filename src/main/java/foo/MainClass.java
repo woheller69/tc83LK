@@ -13,11 +13,14 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class MainClass {
+    static int maxEncountersPerPair = 4;
     static List<Player> playerList = new ArrayList<>();
     static List<Match> matchList = new ArrayList<>();
     static Set<String> participatedPlayers = new HashSet<>();
@@ -81,8 +84,11 @@ public class MainClass {
         writeHtmlMatchlist();
         writeMarkdown();
 
+        //Print warnings
+        System.out.println("\nWarnungen:");
         checkMissingParticipants();
         checkDuplicateMatches();
+        checkFrequentPairEncounters();
     }
 
     private static void writeMarkdown() {
@@ -122,6 +128,29 @@ public class MainClass {
         }
     }
 
+    private static void checkFrequentPairEncounters() {
+        // Map to store how many times each unique pair has played
+        Map<String, Integer> pairCounts = new HashMap<>();
+
+        for (Match match : matchList) {
+            String p1 = match.winner;
+            String p2 = match.loser;
+
+            // Normalize the pair so "A vs B" and "B vs A" map to the same key
+            String pairKey = p1.compareTo(p2) < 0 ? p1 + " vs " + p2 : p2 + " vs " + p1;
+
+            pairCounts.put(pairKey, pairCounts.getOrDefault(pairKey, 0) + 1);
+        }
+
+        // Report pairs that exceeded 4 encounters
+        for (Map.Entry<String, Integer> entry : pairCounts.entrySet()) {
+            if (entry.getValue() > maxEncountersPerPair) {
+                System.out.println("* Das Spielerpaar " + entry.getKey()
+                        + " hatte mehr als " + maxEncountersPerPair + " Begegnungen (insgesamt: " + entry.getValue() + ").");
+            }
+        }
+    }
+
     private static void checkMissingParticipants() {
         List<String> notParticipated = new ArrayList<>();
         for (Player p : playerList) {
@@ -130,7 +159,7 @@ public class MainClass {
             }
         }
         if (!notParticipated.isEmpty()) {
-            System.out.println("\nSpieler ohne Spielteilnahme:");
+            System.out.println("* Spieler ohne Spielteilnahme:");
             for (String name : notParticipated) {
                 System.out.println("* " + name);
             }
@@ -145,7 +174,7 @@ public class MainClass {
                 if (m1.getDate().equals(m2.getDate())
                         && m1.winner.equals(m2.winner)
                         && m1.loser.equals(m2.loser)) {
-                    System.out.println("\nWarnung: Duplikat erkannt am " + m1.getDateTime()
+                    System.out.println("* Duplikat erkannt am " + m1.getDateTime()
                             + ": " + m1.winner + " schlägt " + m1.loser);
                 }
             }
