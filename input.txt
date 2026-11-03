@@ -23,22 +23,22 @@ ADD Nicole, 22.8
 
 ##### Matches
 ##### Date, Winner, Loser
-MATCH 2025-10-10 15:30, Sandra, Lisa 
-MATCH 2025-10-10 15:31, Christine,Lisa 
-MATCH 2025-10-05 15:30, Lisa, Sandra 
-MATCH 2025-10-10 15:30, Tina,Sandra 
-MATCH 2025-10-10 15:30, Rao,Sandra 
-MATCH 2025-10-10 15:30, Rao,Tina 
-MATCH 2025-10-10 15:30, Tina,Rao 
-MATCH 2025-10-08 15:30, Rao,Tina 
-MATCH 2025-10-10 15:30, Tina,Rao 
-MATCH 2025-10-10 15:30, -,Tina 
-MATCH 2025-10-10 15:30, Karin,Sandra 
-MATCH 2025-10-10 15:30, Sandra,Karin 
-MATCH 2025-10-10 15:30, Rao,Karin 
-MATCH 2025-10-10 15:30, Monika,Sandra 
-MATCH 2025-10-10 15:30, Monika,Karin 
-MATCH 2025-10-10 15:30, Monika,Rao 
-MATCH 2025-10-10 15:30, Monika,Sandra 
-MATCH 2025-10-10 15:30, Monika,Karin 
-MATCH 2025-10-10 15:30, -,Monika
+MATCH 2025-10-10, Sandra, Lisa
+MATCH 2025-10-10, Christine,Lisa
+MATCH 2025-10-05, Lisa, Sandra
+MATCH 2025-10-10, Tina,Sandra
+MATCH 2025-10-11, Rao,Sandra
+MATCH 2025-10-12, Rao,Tina
+MATCH 2025-10-13, Tina,Rao
+MATCH 2025-10-08, Rao,Tina
+MATCH 2025-10-14, Tina,Rao
+MATCH 2025-10-15, -,Tina
+MATCH 2025-10-16, Karin,Sandra
+MATCH 2025-10-17, Sandra,Karin
+MATCH 2025-10-18, Rao,Karin
+MATCH 2025-10-19, Monika,Sandra
+MATCH 2025-10-20, Monika,Karin
+MATCH 2025-10-21, Monika,Rao
+MATCH 2025-10-22, Monika,Sandra
+MATCH 2025-10-23, Monika,Karin
+MATCH 2025-10-24, -,Monika

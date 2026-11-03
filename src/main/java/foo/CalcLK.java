@@ -2,25 +2,16 @@ package foo;
 
 public class CalcLK {
 
-    public static double calcImprovement(double winnerLK, double looserLK) {
+    public static double calcImprovement(double winnerLK, double looserLK, double multiplier) {
+        //multiplier includes Altersklassenfaktor and Zählweisenfaktor 100%
         //Use values rounded to 1 decimal
         double winnerLK1d = (double) (Math.floor(winnerLK*10.0)/10.0);
         double looserLK1d = (double) (Math.floor(looserLK*10.0)/10.0);
-        //System.out.println("Winner " + winnerLK1d);
-        //System.out.println("Looser " + looserLK1d);
-        //System.out.println("Differenz " + (winnerLK1d-looserLK1d));
         double points = calcPoints(winnerLK1d-looserLK1d);
-
-        //Doppelte Punkte im Verein für mehr Dynamik. Damit kann sich ein guter Spieler innerhalb einer Saison von ganz hinten nach vorne spielen
-        points*=2;
-        //System.out.println("Punkte " + points);
         double barrier = calcBarrier(winnerLK1d);
-        //System.out.println("Hürde " + barrier);
         double improvement = points/barrier;
-        //System.out.println("Verbesserung " + improvement);
 
-        return improvement;
-        //Altersklassenfaktor und Zählweisenfaktor 100%
+        return improvement*multiplier;
     }
 
     static double calcPoints(double diff){

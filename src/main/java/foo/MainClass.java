@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -41,9 +42,8 @@ public class MainClass {
                 } else if (line.startsWith("MATCH")){
                     String content = line.split("MATCH")[1].trim();
                     String date = content.split(",")[0].trim().toUpperCase();
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-                    LocalDateTime localDateTime = LocalDateTime.parse(date, formatter);
-                    long dateSeconds = localDateTime.toEpochSecond(ZoneOffset.UTC);
+                    LocalDate localDate = LocalDate.parse(date);
+                    long dateSeconds = localDate.atTime(12,0).toEpochSecond(ZoneOffset.UTC);
 
                     String winner = content.split(",")[1].trim().toUpperCase();
                     String loser = content.split(",")[2].trim().toUpperCase();
@@ -264,7 +264,7 @@ public class MainClass {
             participatedPlayers.add(winner.name);
             participatedPlayers.add(loser.name);
 
-            winner.improvement = winner.improvement + CalcLK.calcImprovement(winner.lkValue, loser.lkValue);
+            winner.improvement = winner.improvement + CalcLK.calcImprovement(winner.lkValue, loser.lkValue, 2.0); //Doppelte Punkte im Verein für mehr Dynamik. Damit kann sich ein guter Spieler innerhalb einer Saison von ganz hinten nach vorne spielen
         }
     }
 
